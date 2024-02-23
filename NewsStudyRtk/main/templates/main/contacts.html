@@ -1,0 +1,120 @@
+{% extends 'main/homebase.html' %}
+{% load static %}
+{% block title %} Контакты {% endblock %}
+{% block main %}
+    <main class="row">
+        <div class="col-md-2 side_menu">
+            <h1 class="text-center" style="font-family: Rubik Marker Hatch, cursive, Arial, Helvetica Neue, Helvetica, sans-serif;">Меню</h1>
+            {% block sidebar %}
+                <ul id="main" class="vstack gap-2">
+                    {% block home %}<li class="p-1"><i class="fa-solid fa-house"></i><a href="{% url 'home' %}" style="text-decoration: none; color: #FDCE4B;">&nbspДомой</a></li>{% endblock %}
+                    {% block news %}<li class="p-1"><i class="fa-solid fa-radio"></i><a href="{% url 'news_index' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНовости</a></li>{% endblock %}
+                    {% block about %}<li class="p-1"><i class="fa-solid fa-people-group"></i><a href="{% url 'of' %}" style="text-decoration: none; color: #FDCE4B;">&nbspО нас</a></li>{% endblock %}
+                    {% block readers %}<li class="p-1"><i class="fa-solid fa-user-group"></i><a href="{% url 'news_readers' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНаши гости</a></li>{% endblock %}
+                    <li><a href="javascript:window.history.back();" style="text-decoration: none; color: #FDCE4B;"><i class="fa-solid fa-reply"> Назад</i></a></li>
+                    {% block user %}
+                        {% include 'users/user-actions.html' %}
+                    {% endblock %}
+                </ul>
+            {% endblock %}
+        </div>
+        <div class="col-md-6">
+            {% block slider %}
+                {% include 'main/hero.html' %}
+            {% endblock %}
+        </div>
+        <div class="col-md-4">
+            {% block draw %}
+                {% include 'main/draw.html' %}
+            {% endblock %}
+        </div>
+    </main>
+    <script>
+        let currentElem = null;
+        main.onmouseover = function(event) {
+          if (currentElem) return;
+          let target = event.target.closest('li');
+          if (!target) return;
+          if (!main.contains(target)) return;
+          currentElem = target;
+          target.style.background = '#212529';
+          target.style.color = '#FEDE00';
+          target.style.boxShadow = "5px -5px 5px #212529, -5px 5px 5px #212529, -5px -5px 5px #212529, 5px 5px 5px #212529";
+          target.style.fontWeight = '600';
+          currentElem.style.transition = 'all 0.5s';
+        };
+        main.onmouseout = function(event) {
+          if (!currentElem) return;
+          let relatedTarget = event.relatedTarget;
+          while (relatedTarget) {
+            if (relatedTarget == currentElem) return;
+            relatedTarget = relatedTarget.parentNode;
+          }
+          currentElem.style.background = '#5B5561';
+          currentElem.style.color = '#E8C24D';
+          currentElem.style.border = '';
+          currentElem.style.boxShadow = '';
+          currentElem.style.fontWeight = '400';
+          currentElem.style.transition = 'all 0.5s';
+          currentElem = null;
+        };
+    </script>
+    <script>
+        const items = document.querySelectorAll('.rs-draw-item');
+        const placeholders = document.querySelectorAll('.rs-draw-placeholder');
+
+        for (const item of items) {
+            item.addEventListener('dragstart', dragStart);
+            item.addEventListener('dragend', dragEnd);
+        }
+
+        for (const placeholder of placeholders) {
+            placeholder.addEventListener('dragover', dragOver);
+            placeholder.addEventListener('dragenter', dragEnter);
+            placeholder.addEventListener('dragleave', dragLeave);
+            placeholder.addEventListener('drop', dragDrop);
+        }
+
+        function dragStart(evt) {
+            for (const item of items) {
+                if (evt.target === item) {
+                    item.classList.add('rs-draw-hold');
+                    setTimeout(() => item.classList.add('rs-draw-hide'), 0);
+                }
+            }
+        }
+
+        function dragEnd(evt) {
+            for (const item of items) {
+                if (evt.target === item) {
+                    item.className = 'rs-draw-item';
+                }
+            }
+        }
+
+        function dragOver(evt) {
+            evt.preventDefault();
+        }
+
+        function dragEnter(evt) {
+            evt.target.classList.add('rs-draw-hovered');
+        }
+
+        function dragLeave(evt) {
+            evt.target.classList.remove('rs-draw-hovered');
+        }
+
+        function dragDrop(evt) {
+            evt.preventDefault();
+            const draggedItem = document.querySelector('.rs-draw-hold');
+            for (const placeholder of placeholders) {
+                if (placeholder.classList.contains('rs-draw-hovered')) {
+                    placeholder.appendChild(draggedItem);
+                    placeholder.classList.remove('rs-draw-hovered');
+                    draggedItem.classList.remove('rs-draw-hide');
+                    break;
+                }
+            }
+        }
+    </script>
+{% endblock %}

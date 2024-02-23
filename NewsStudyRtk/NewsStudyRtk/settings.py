@@ -27,7 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECURITY WARNING: keep the secret key used in production secret!
 DEBUG = True
 
-with open('/home/c/cd80175/deploy53/public_html/NewsStudyRtk/NewsStudyRtk/secret_key.txt') as f:
+with open('/home/c/cd80175/deploy53/public_html/secret_key.txt') as f:
     SECRET_KEY = f.read().strip()
 
 ALLOWED_HOSTS = ["dixie-34.ru"]
