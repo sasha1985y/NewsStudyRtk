@@ -1,0 +1,12 @@
+*.log
+*.pot
+*.pyc
+__pycache__
+db.sqlite3
+.idea
+/env
+*.env
+secret_key.txt
+*.ssh/
+id_rsa.pub
+id_rsa
