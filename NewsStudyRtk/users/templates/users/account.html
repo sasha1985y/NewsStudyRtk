@@ -1,0 +1,465 @@
+{% extends 'main/homebase.html' %}
+{% load static %}
+{% load users_extras %}
+{% block title %} Страница пользователя {% endblock %}
+
+{% block header %}
+    <header class="row" style="background: linear-gradient(87deg, #9D8D8E 30%,#9D5F13 70%) center fixed">
+        <div class="col-md-1"></div>
+        <img class="col-md-1 app__logo" src="{% static 'main/img/logo.svg' %}" width="100" height="100" alt="логотип" style="transition: all 1.5s;" onmouseover="this.style.transform='scale(1.5) rotate(1440deg)';" onmouseout="this.style.transform='none';">
+        <div class="col-md-1"></div>
+        <div class="col-md-3" style="margin-top: 2%">
+            <h1>D E P L O Y 53</h1>
+        </div>
+        {% block clock %}
+            {% include 'main/clock-special.html' %}
+        {% endblock %}
+    </header>
+{% endblock %}
+{% block main %}
+    <main class="row" style="background: url({% static 'main/img/evening.gif' %}) no-repeat;  background-size: cover">
+        <div class="col-md-2 side_menu" style="background: linear-gradient(167deg, #9D8D8E 30%, #F8D093 70%) center fixed">
+            {% block sidebar %}
+                <h1 class="text-center" style="font-family: Rubik Marker Hatch, cursive, Arial, Helvetica Neue, Helvetica, sans-serif;">Меню</h1>
+                <ul class="vstack gap-2" id="main">
+                    {% block home %}<li class="p-1"><i class="fa-solid fa-house"></i><a href="{% url 'home' %}" style="text-decoration: none; color: #FDCE4B;">&nbspДомой</a></li>{% endblock %}
+                    {% block news %}<li class="p-1"><i class="fa-solid fa-radio"></i><a href="{% url 'news_index' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНовости</a></li>{% endblock %}
+                    {% block contacts %}<li class="p-1"><i class="fa-solid fa-address-book"></i><a href="{% url 'contact' %}" style="text-decoration: none; color: #FDCE4B;">&nbspКонтакты</a></li>{% endblock %}
+                    {% block about %}<li class="p-1"><i class="fa-solid fa-people-group"></i><a href="{% url 'of' %}" style="text-decoration: none; color: #FDCE4B;">&nbspО нас</a></li>{% endblock %}
+                    {% block readers %}<li class="p-1"><i class="fa-solid fa-user-group"></i><a href="{% url 'news_readers' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНаши гости</a></li>{% endblock %}
+                    {% block exit %}<li class="p-1"><i class="fa-solid fa-door-open"></i><a href="{% url 'logout' %}" style="text-decoration: none; color: #FDCE4B;">&nbspВыход</a></li>{% endblock %}
+                    {% block admin %}
+                        {% if request.user.is_superuser %}
+                            <li class="p-1"><i class="fa-solid fa-crown {% if request.path  == '/admin/' %} link-active {% endif %}"></i><a href="/admin/" style="text-decoration: none; color: #FDCE4B;">&nbspЯ-Админ?</a></li>
+                        {% endif %}
+                    {% endblock %}
+                    {% block catalog %}
+                        {% if request.user|has_group:"Authors" %}
+                            <li class="p-1"><i class="fa-solid fa-layer-group"></i><a href="{% url 'my_news_list' %}" style="text-decoration: none; color: #FDCE4B;">&nbspМои статьи</a></li>
+                            <li class="p-1"><i class="fa-solid fa-heart"></i><a href="{% url 'favorites' %}" style="text-decoration: none; color: #FDCE4B;">&nbspИзбранное</a></li>
+                        {% else %}
+                            <li class="p-1"><i class="fa-solid fa-heart"></i><a href="{% url 'favorites' %}" style="text-decoration: none; color: #FDCE4B;">&nbspИзбранное</a></li>
+                        {% endif %}
+                        <li><a href="javascript:window.history.back();" style="text-decoration: none; color: #FDCE4B;"><i class="fa-solid fa-reply"> Назад</i></a></li>
+                    {% endblock %}
+                </ul>
+            {% endblock %}
+        </div>
+        <ul class="col" style="list-style: none;" id="main2">
+            <li class="col-md-5" style="background: #9D8D8E; padding: 0; margin: 1%; opacity: 0.9;">
+                <div class="row">
+                    <img src="{{ request.user.account.account_image.url }}" id="user-ava" alt="коллега" style="height: 40vh;" />
+                </div>
+                <div class="row">
+                    <div class="col-md-1">
+                        <style>
+                            .rs-draw-body {
+                              font-family: "Rubik Marker Hatch", cursive, "Arial", "Helvetica Neue", "Helvetica", sans-serif;
+                              background: linear-gradient(346deg, #F7C583 30%, #7F5829 70%);
+                              padding: 0;
+                              justify-content: center;
+                              overflow: hidden;
+                              margin: 0;
+                              width: 212px;
+                              height: 152px;
+                            }
+
+                            .rs-draw-row {
+                              display: flex;
+                              justify-content: space-between;
+                              margin: 5px 5px 5px 5px;
+                            }
+
+                            .rs-draw-col-header {
+                              width: 25px;
+                              box-shadow: 4px 4px 9px rgba(198, 198, 198, 0.36);
+                              border-radius: 20px;
+                              padding: 0.8rem 1rem;
+                              color: #fff;
+                            }
+
+                            .rs-draw-item {
+                              cursor: grab;
+                            }
+
+                            .rs-draw-item:active {
+                              cursor: grabbing;
+                            }
+
+                            .rs-draw-placeholder {
+                              background-color: #A56C2A;
+                              width: 2rem;
+                              height: 2rem;
+                            }
+
+                            .rs-draw-hold {
+                              border: 1px solid #1c7aa0;
+                            }
+
+                            .rs-draw-hide {
+                              display: none;
+                            }
+
+                            .rs-draw-hovered {
+                              border-top: 5px dotted #F0C077;
+                              transition: all 0.2s;
+                            }
+                        </style>
+                        <div class="rs-draw-body">
+                            <div class="rs-draw-row">
+                                {% if request.user.account.vk == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.vk }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-vk" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.telegram == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.telegram }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-telegram" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.skype == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.skype }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-skype" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.snapchat == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.snapchat }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-square-snapchat" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.linkedin == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.linkedin }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-linkedin" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                            </div>
+
+                            <div class="rs-draw-row">
+                                {% if request.user.account.youtube == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.youtube }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-youtube" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.github == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.github }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-github" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.discord == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.discord }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-discord" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.twitter == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.twitter }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-square-twitter" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.facebook == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.facebook }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-square-facebook" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                            </div>
+                            <div class="rs-draw-row">
+                                {% if request.user.account.instagram == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.instagram }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-square-instagram" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.twitch == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.twitch }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-twitch" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.viber == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.viber }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-viber" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                {% if request.user.account.whatsapp == '' %}
+                                    <div class="rs-draw-placeholder"></div>
+                                {% else %}
+                                    <div class="rs-draw-placeholder">
+                                        <a href="{{ request.user.account.whatsapp }}" class="rs-draw-item" draggable="true"><i class="fa-brands fa-square-whatsapp" style="font-size: 30px; color: white"></i></a>
+                                    </div>
+                                {% endif%}
+                                <div class="rs-draw-placeholder"></div>
+                            </div>
+                            <div class="rs-draw-row">
+                                <div class="rs-draw-placeholder"></div>
+                                <div class="rs-draw-placeholder"></div>
+                                <div class="rs-draw-placeholder"></div>
+                                <div class="rs-draw-placeholder"></div>
+                                <div class="rs-draw-placeholder"></div>
+                            </div>
+                        </div>
+                        <script>
+                            const items = document.querySelectorAll('.rs-draw-item');
+                            const placeholders = document.querySelectorAll('.rs-draw-placeholder');
+
+                            for (const item of items) {
+                                item.addEventListener('dragstart', dragStart);
+                                item.addEventListener('dragend', dragEnd);
+                            }
+
+                            for (const placeholder of placeholders) {
+                                placeholder.addEventListener('dragover', dragOver);
+                                placeholder.addEventListener('dragenter', dragEnter);
+                                placeholder.addEventListener('dragleave', dragLeave);
+                                placeholder.addEventListener('drop', dragDrop);
+                            }
+
+                            function dragStart(evt) {
+                                for (const item of items) {
+                                    if (evt.target === item) {
+                                        item.classList.add('rs-draw-hold');
+                                        setTimeout(() => item.classList.add('rs-draw-hide'), 0);
+                                    }
+                                }
+                            }
+
+                            function dragEnd(evt) {
+                                for (const item of items) {
+                                    if (evt.target === item) {
+                                        item.className = 'rs-draw-item';
+                                    }
+                                }
+                            }
+
+                            function dragOver(evt) {
+                                evt.preventDefault();
+                            }
+
+                            function dragEnter(evt) {
+                                evt.target.classList.add('rs-draw-hovered');
+                            }
+
+                            function dragLeave(evt) {
+                                evt.target.classList.remove('rs-draw-hovered');
+                            }
+
+                            function dragDrop(evt) {
+                                evt.preventDefault();
+                                const draggedItem = document.querySelector('.rs-draw-hold');
+                                for (const placeholder of placeholders) {
+                                    if (placeholder.classList.contains('rs-draw-hovered')) {
+                                        placeholder.appendChild(draggedItem);
+                                        placeholder.classList.remove('rs-draw-hovered');
+                                        draggedItem.classList.remove('rs-draw-hide');
+                                        break;
+                                    }
+                                }
+                            }
+                        </script>
+                    </div>
+                </div>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Никнейм</p>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>User name</p>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Имя</p>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Фамилия</p>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>День рождения</p>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Адрес</p>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Место работы</p>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Дата регистрации</p>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Почта</p>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Последний онлайн</p>
+            </li>
+            <li class="col-md-5" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Телефон</p>
+            </li>
+        </ul>
+        <ul class="col-md-5" style="margin-top: 32%;  list-style: none;" id="main3">
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if request.user.account.nickname == '' %}
+                    Пока нет данных
+                {% else %}
+                    {{ request.user.account.nickname }}
+                {% endif %}<!--button class="visually-hidden"><i class="fa-solid fa-lock-open"></i><i-- class="fa-solid fa-lock"></i></button--></p>
+            </li>
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{{ request.user.username }}</p>
+            </li>
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if request.user.first_name == '' %}
+                    Пока нет данных
+                {% else %}
+                    {{ request.user.first_name }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if request.user.last_name == '' %}
+                    Пока нет данных
+                {% else %}
+                    {{ request.user.last_name }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if request.user.account.birthdate == None %}
+                    Пока нет данных
+                {% else %}
+                    {{ request.user.account.birthdate }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if request.user.account.address == '' %}
+                    Пока нет данных
+                {% else %}
+                    {{ request.user.account.address }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if request.user.account.job == '' %}
+                    Пока нет данных
+                {% else %}
+                    {{ request.user.account.job }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{{ request.user.date_joined }}</p>
+            </li>
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if request.user.email == '' %}
+                    Пока нет данных
+                {% else %}
+                    {{ request.user.email }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{{ request.user.last_login }}</p>
+            </li>
+            <li class="col-md-12" style="background: #9D8D8E; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if request.user.account.phone == '' %}
+                    Пока нет данных
+                {% else %}
+                    {{ request.user.account.phone }}
+                {% endif %}</p>
+            </li>
+        </ul>
+        <ul class="row" style="list-style: none;" id="main4">
+            <li class="col-md-2" style="background: #9D8D8E; padding: 4% 0 0 4%; opacity: 0.7;"></li>
+            <li class="col-md-2" style="background: #9D8D8E; padding: 1% 1% 1% 1%; opacity: 0.6;"><div class="text-center"><i class="fa-solid fa-screwdriver-wrench"></i><a href="{% url 'profile_update' %}" style="text-decoration: none; color: #FDCE4B;">&nbspРедактировать</a></div></li>
+            <li class="col-md-2" style="background: #9D8D8E; padding: 4% 0 0 4%; opacity: 0.5;"></li>
+            <li class="col-md-2" style="background: #9D8D8E; padding: 4% 0 0 4%; opacity: 0.4;"></li>
+            <li class="col-md-2" style="background: #9D8D8E; padding: 4% 0 0 4%; opacity: 0.3;"></li>
+            <li class="col-md-2" style="background: #9D8D8E; padding: 4% 0 0 4%; opacity: 0.2;"></li>
+        </ul>
+        <a href="https://99px.ru/sstorage/86/2017/06/image_860306172119167238077.gif">источник гифки</a>
+    </main>
+    <script>
+                let currentItem = null;
+        main.onmouseover = function(event) {
+          if (currentItem) return;
+          let target = event.target.closest('li');
+          if (!target) return;
+          if (!main.contains(target)) return;
+          currentItem = target;
+          target.style.background = '#212529';
+          target.style.color = '#FEDE00';
+          target.style.boxShadow = "5px -5px 5px #212529, -5px 5px 5px #212529, -5px -5px 5px #212529, 5px 5px 5px #212529";
+          target.style.fontWeight = '600';
+          currentItem.style.transition = 'all 0.5s';
+        };
+        main.onmouseout = function(event) {
+          if (!currentItem) return;
+          let relatedTarget = event.relatedTarget;
+          while (relatedTarget) {
+            if (relatedTarget == currentItem) return;
+            relatedTarget = relatedTarget.parentNode;
+          }
+          currentItem.style.background = '';
+          currentItem.style.color = '#E8C24D';
+          currentItem.style.border = '';
+          currentItem.style.boxShadow = '';
+          currentItem.style.fontWeight = '400';
+          currentItem.style.transition = 'all 0.5s';
+          currentItem = null;
+        };
+    </script>
+    <script>
+        let currentElem = null;
+        function handleMouseOver(event) {
+          if (currentElem) return;
+          let target = event.target.closest('li');
+          if (!target) return;
+          if (!main2.contains(target) && !main3.contains(target) && !main4.contains(target)) {
+            return;
+          }
+          currentElem = target;
+          target.style.background = '#212529';
+          target.style.color = '#FEDE00';
+          target.style.boxShadow = "5px -5px 5px #212529, -5px 5px 5px #212529, -5px -5px 5px #212529, 5px 5px 5px #212529";
+          target.style.fontWeight = '600';
+          currentElem.style.transition = 'all 0.5s';
+        };
+        function handleMouseOut(event) {
+          if (!currentElem) return;
+          let relatedTarget = event.relatedTarget;
+          while (relatedTarget) {
+            if (relatedTarget == currentElem) return;
+            relatedTarget = relatedTarget.parentNode;
+          }
+          currentElem.style.background = '#AE998F';
+          currentElem.style.color = '#E8C24D';
+          currentElem.style.border = '';
+          currentElem.style.boxShadow = '';
+          currentElem.style.fontWeight = '400';
+          currentElem.style.transition = 'all 0.5s';
+          currentElem = null;
+        };
+        main.addEventListener('mouseover', handleMouseOver);
+        main2.addEventListener('mouseover', handleMouseOver);
+        main3.addEventListener('mouseover', handleMouseOver);
+        main4.addEventListener('mouseover', handleMouseOver);
+        main.addEventListener('mouseout', handleMouseOut);
+        main2.addEventListener('mouseout', handleMouseOut);
+        main3.addEventListener('mouseout', handleMouseOut);
+        main4.addEventListener('mouseout', handleMouseOut);
+    </script>
+{% endblock %}

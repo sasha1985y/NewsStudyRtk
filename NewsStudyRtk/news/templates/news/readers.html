@@ -1,0 +1,94 @@
+{% extends 'main/homebase.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% load crispy_forms_tags %}
+{% regroup readers by id as reader_list %}
+{% block title %} Участники {% endblock %}
+
+{% block main %}
+    <style>
+        .fade {
+            width: 10px;
+            height: 10px;
+            transition: all 2s;
+        }
+
+        .unfade {
+            transition: all 2s;
+        }
+    </style>
+    <main class="row" style="background: url({% static 'main/img/зима.gif' %}) no-repeat;  background-size: cover; position: relative; height: auto;" id="main">
+        <div class="col-md-2 side_menu" style="list-style: none; position: relative; height: auto;">
+            {% block sidebar %}
+                <h1 class="text-center" style="font-family: Rubik Marker Hatch, cursive, Arial, Helvetica Neue, Helvetica, sans-serif;">Меню</h1>
+                <ul class="vstack gap-2">
+                    {% block home %}<li class="p-1"><i class="fa-solid fa-house"></i><a href="{% url 'home' %}" style="text-decoration: none; color: #FDCE4B;">&nbspДомой</a></li>{% endblock %}
+                    {% block news %}<li class="p-1"><i class="fa-solid fa-radio"></i><a href="{% url 'news_index' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНовости</a></li>{% endblock %}
+                    {% block contacts %}<li class="p-1"><i class="fa-solid fa-address-book"></i><a href="{% url 'contact' %}" style="text-decoration: none; color: #FDCE4B;">&nbspКонтакты</a></li>{% endblock %}
+                    {% block about %}<li class="p-1"><i class="fa-solid fa-people-group"></i><a href="{% url 'of' %}" style="text-decoration: none; color: #FDCE4B;">&nbspО нас</a></li>{% endblock %}
+                    <li><a href="javascript:window.history.back();" style="text-decoration: none; color: #FDCE4B;"><i class="fa-solid fa-reply"> Назад</i></a></li>
+                    <li class="p-1"><button type="button" class="btn btn-secondary fa-solid fa-solid fa-user-ninja"></button></li>
+                    {% block user %}
+                            {% include 'users/user-actions.html' %}
+                    {% endblock %}
+                </ul>
+            {% endblock %}
+            <div style="height: 13vh;"></div>
+        </div>
+        {% block content %}
+            <div class="col text-center">
+                <h1 class="text-center" style="font-family: Rubik Marker Hatch, cursive, Arial, Helvetica Neue, Helvetica, sans-serif; color: #46344E;">Гости сайта</h1>
+                <div class="row text-center">
+                    <div class="col-md-3" style="margin: 0; padding: 0;"></div>
+                    <div class="row" style="font-family: Iceberg , cursive, Arial, Helvetica Neue, Helvetica, sans-serif;">
+                        {% for reader in readers %}
+                          <div class="col-sm-3 fadeable unfade">
+                            <a href="{% url 'user_detail' reader.0 %}">
+                              <img src="{{ '/media/'|add:reader.2 }}" alt="{{ reader.1 }}" width="150" height="150">
+                            </a>
+                            <p class="fs-3"><a href="{% url 'user_detail' reader.0 %}" style="color: #46344E; text-decoration: none;">{{ reader.1 }}</a></p>
+                          </div>
+                        {% endfor %}
+                    </div>
+                    {% if readers.has_other_pages %}
+                        <nav aria-label="Page navigation">
+                          <ul class="pagination">
+                            {% if readers.has_previous %}
+                              <li class="page-item">
+                                <a class="page-link" href="?page={{ readers.previous_page_number }}">Previous</a>
+                              </li>
+                            {% endif %}
+                            {% for num in readers.paginator.page_range %}
+                              {% if num == readers.number %}
+                                <li class="page-item active">
+                                  <a class="page-link" href="#">{{ num }} <span class="sr-only">(current)</span></a>
+                                </li>
+                              {% elif num > readers.number|add:'-3' and num < readers.number|add:'3' %}
+                                <li class="page-item">
+                                  <a class="page-link" href="?page={{ num }}">{{ num }}</a>
+                                </li>
+                              {% endif %}
+                            {% endfor %}
+                            {% if readers.has_next %}
+                              <li class="page-item">
+                                <a class="page-link" href="?page={{ readers.next_page_number }}">Next</a>
+                              </li>
+                            {% endif %}
+                          </ul>
+                        </nav>
+                    {% endif %}
+                    <div class="col-md-3" style="margin: 0; padding: 0;"></div>
+                </div>
+            </div>
+        {% endblock %}
+    </main>
+    <script>
+        const fadeBtn = document.querySelector('.btn-secondary');
+        fadeBtn.addEventListener('click', () => {
+            fadeBtn.classList.toggle('fa-user-ninja');
+            fadeBtn.classList.toggle('fa-people-group');
+            const photos = document.querySelectorAll('.fadeable');
+            Array.from(photos).map((item) => item.classList.toggle('fade'));
+        });
+    </script>
+{% endblock %}

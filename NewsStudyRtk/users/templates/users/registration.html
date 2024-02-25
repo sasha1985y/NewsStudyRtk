@@ -1,0 +1,89 @@
+{% extends 'main/homebase.html' %}
+{% load static %}
+{% load bootstrap5 %}
+{% load crispy_forms_tags %}
+{% block title %} Страница регистрации {% endblock %}
+
+{% block main %}
+    <main class="row">
+        <div class="col-md-2 side_menu" style="list-style: none;">
+            {% block sidebar %}
+                <h1 class="text-center" style="font-family: Rubik Marker Hatch, cursive, Arial, Helvetica Neue, Helvetica, sans-serif;">Меню</h1>
+                <ul id="main" class="vstack gap-2">
+                    {% block home %}<li class="p-1"><i class="fa-solid fa-house"></i><a href="{% url 'home' %}" style="text-decoration: none; color: #FDCE4B;">&nbspДомой</a></li>{% endblock %}
+                    {% block news %}<li class="p-1"><i class="fa-solid fa-radio"></i><a href="{% url 'news_index' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНовости</a></li>{% endblock %}
+                    {% block contacts %}<li class="p-1"><i class="fa-solid fa-address-book"></i><a href="{% url 'contact' %}" style="text-decoration: none; color: #FDCE4B;">&nbspКонтакты</a></li>{% endblock %}
+                    {% block about %}<li class="p-1"><i class="fa-solid fa-people-group"></i><a href="{% url 'of' %}" style="text-decoration: none; color: #FDCE4B;">&nbspО нас</a></li>{% endblock %}
+                    {% block readers %}<li class="p-1"><i class="fa-solid fa-user-group"></i><a href="{% url 'news_readers' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНаши гости</a></li>{% endblock %}
+                    <li><a href="javascript:window.history.back();" style="text-decoration: none; color: #FDCE4B;"><i class="fa-solid fa-reply"> Назад</i></a></li>
+                </ul>
+                <a href="https://ru.freepik.com/free-photo/asphalt-road-in-the-city_934935.htm?query=%D1%84%D0%BE%D1%82%D0%BE%20%D0%B4%D0%BE%D1%80%D0%BE%D0%B3%D0%B8#from_view=detail_alsolike">Изображение от evening_tao</a> на Freepik
+            {% endblock %}
+        </div>
+        {% block content %}
+            <div class="col" style="background: url({% static 'main/img/пригород.jpg' %}) no-repeat;  background-size: cover; padding: 0;">
+                <div class="text-center" style="background: linear-gradient(180deg, #8f8f8f60 50%, #000000bd 70%);">
+                    <h1 style="font-family: Rubik Marker Hatch, cursive, Arial, Helvetica Neue, Helvetica, sans-serif;">Регистрация нового пользователя</h1>
+                    <div class="row">
+                        <div class="col-md-3" style="margin: 0; padding: 0;"></div>
+                        <div class="col">
+                            <form method="post" class="contact_form">
+                                {% csrf_token %}
+                                {{ form|crispy }}
+                                <div class="row">
+                                    <div class="col-md-4"></div>
+                                    <div class="col form-check">
+                                        <h5>Тип аккаунта:</h5>
+                                        <div>
+                                            <input class="form-check-input" type="radio" id="author" name="account_type" value="author" required />
+                                            <label class="form-check-label" for="author">Автор</label>
+                                            <img src="{% static 'main/img/ico/question-solid.svg' %}" title="Авторы могут создавать статьи" style="cursor: help;" width="20" height="20">
+                                        </div>
+                                        <div>
+                                            <input class="form-check-input" type="radio" id="reader" name="account_type" value="reader" required />
+                                            <label class="form-check-label" for="reader">Читатель</label>
+                                            <img src="{% static 'main/img/ico/question-solid.svg' %}" title="Читатели могут только читать" style="cursor: help;" width="20" height="20">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4"></div>
+                                </div>
+                                <input type="submit" class="btn btn-success" value = "Регистрация">
+                            </form>
+                        </div>
+                        <div class="col-md-3" style="margin: 0; padding: 0;"></div>
+                    </div>
+                </div>
+            </div>
+        {% endblock %}
+    </main>
+    <script>
+        let currentElem = null;
+        main.onmouseover = function(event) {
+          if (currentElem) return;
+          let target = event.target.closest('li');
+          if (!target) return;
+          if (!main.contains(target)) return;
+          currentElem = target;
+          target.style.background = '#212529';
+          target.style.color = '#FEDE00';
+          target.style.boxShadow = "5px -5px 5px #212529, -5px 5px 5px #212529, -5px -5px 5px #212529, 5px 5px 5px #212529";
+          target.style.fontWeight = '600';
+          currentElem.style.transition = 'all 0.5s';
+        };
+        main.onmouseout = function(event) {
+          if (!currentElem) return;
+          let relatedTarget = event.relatedTarget;
+          while (relatedTarget) {
+            if (relatedTarget == currentElem) return;
+            relatedTarget = relatedTarget.parentNode;
+          }
+          currentElem.style.background = '';
+          currentElem.style.color = '#E8C24D';
+          currentElem.style.border = '';
+          currentElem.style.boxShadow = '';
+          currentElem.style.fontWeight = '400';
+          currentElem.style.transition = 'all 0.5s';
+          currentElem = null;
+        };
+    </script>
+{% endblock %}
