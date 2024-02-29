@@ -10,3 +10,4 @@ secret_key.txt
 *.ssh/
 id_rsa.pub
 id_rsa
+/static
