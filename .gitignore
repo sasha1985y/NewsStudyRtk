@@ -18,3 +18,4 @@ id_rsa
 .htaccess
 index.htm
 virtualenv.pyz
+*.git/
