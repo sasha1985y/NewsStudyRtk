@@ -250,7 +250,7 @@
                             {% if articles|length  != 0 %}
                                 {% for article in articles reversed %}
                                     {% if article.image_set.all %}
-                                        <div>
+                                        <div class="text-center">
                                             <img src="{{ article.image_set.all.0.image.url }}"  height="100%" width="auto" alt="фото">
                                         </div>
                                     {% endif %}
