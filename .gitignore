@@ -11,3 +11,6 @@ secret_key.txt
 id_rsa.pub
 id_rsa
 /static
+/venv
+/media
+/license
