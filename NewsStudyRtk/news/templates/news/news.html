@@ -251,7 +251,7 @@
                                 {% for article in articles reversed %}
                                     {% if article.image_set.all %}
                                         <div>
-                                            <img src="{{ article.image_set.all.0.image.url }}" width="100%" height="100%" alt="фото">
+                                            <img src="{{ article.image_set.all.0.image.url }}"  height="100%" width="auto" alt="фото">
                                         </div>
                                     {% endif %}
                                 {% endfor %}
