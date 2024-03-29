@@ -10,6 +10,9 @@ def index(request):
 
 def contacts(request):
     return render(request,'main/contacts.html')
+    
+def offer(request):
+    return render(request,'main/offer.html')
 
 def demoform(request):
     form = DemoForm()
