@@ -9,7 +9,7 @@
         <div class="col-md-3">
             <h1>D E P L O Y 53</h1>
             <br>
-            <div style="margin-left: 7%;"><p style="margin: 0; padding: 0;">Студия создания сайтов и</p><span style="margin-left: 20%;">приложений</span></div>
+            <div style="margin-left: 7%;"><p style="margin: 0; padding: 0;">Сайт для создания</p><span style="margin-left: 20%;">статей</span></div>
         </div>
         {% block clock %}
             {% include 'main/clock-special.html' %}
@@ -27,6 +27,7 @@
                         {% block news %}<li class="p-1"><i class="fa-solid fa-radio"></i><a href="{% url 'news_index' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНовости</a></li>{% endblock %}
                         {% block contacts %}<li class="p-1"><i class="fa-solid fa-address-book"></i><a href="{% url 'contact' %}" style="text-decoration: none; color: #FDCE4B;">&nbspКонтакты</a></li>{% endblock %}
                         {% block readers %}<li class="p-1"><i class="fa-solid fa-user-group"></i><a href="{% url 'news_readers' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНаши гости</a></li>{% endblock %}
+                        {% block offer %}<li class="p-1"><i class="fa-solid fa-gem"></i><a href="{% url 'action' %}" style="text-decoration: none; color: #FDCE4B;">&nbspАкция</a></li>{% endblock %}
                         <li><a href="javascript:window.history.back();" style="text-decoration: none; color: #FDCE4B;"><i class="fa-solid fa-reply"> Назад</i></a></li>
                         {% block user %}
                             {% include 'users/user-actions.html' %}

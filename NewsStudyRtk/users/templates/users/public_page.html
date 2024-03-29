@@ -1,0 +1,204 @@
+{% extends 'main/homebase.html' %}
+{% load static %}
+{% load users_extras %}
+{% block title %} Публичная страница {% endblock %}
+{% block header %}
+    <header class="row" style="background: linear-gradient(87deg, #5B5561 30%, #535985 70%) center fixed">
+        <div class="col-md-1"></div>
+        <img class="col-md-1 app__logo" src="{% static 'main/img/logo.svg' %}" width="100" height="100" alt="логотип" style="transition: all 1.5s;" onmouseover="this.style.transform='scale(1.5) rotate(1440deg)';" onmouseout="this.style.transform='none';">
+        <div class="col-md-1">
+            <div class="row">
+                <div class="col p-2"></div>
+                <div class="col p-2">{% if author.user|has_group:"Actions Required" %}<img src="{% static 'main/img/ico/question-solid.svg' %}" title="На рассмотрении" style="cursor: help;" width="30" height="30">{% endif %}</div>
+            </div>
+            <div class="row">
+                <div class="col p-2">{% if author.user|has_group:"Authors" %}<img src="{% static 'main/img/ico/feather-solid.svg' %}" title="Автор" style="cursor: help;" width="30" height="30">{% endif %}</div>
+                <div class="col p-2">{% if author.user|has_group:"Reader" %}<img src="{% static 'main/img/ico/scroll-solid.svg' %}" title="Читатель" style="cursor: help;" width="30" height="30">{% endif %}</div>
+            </div>
+            <div class="row">
+                <div class="col p-2">{% if author.user.is_superuser %}<img src="{% static 'main/img/ico/crown-solid.svg' %}" title="Администратор сайта" style="cursor: help;" width="30" height="30">{% endif %}</div>
+                <div class="col p-2">{% if author.user.is_staff %}<img src="{% static 'main/img/ico/key-solid.svg' %}" title="Персонал" style="cursor: help;" width="30" height="30">{% endif %}</div>
+            </div>
+        </div>
+        <div class="col-md-3" style="margin-top: 2%">
+            <h1>D E P L O Y 53</h1>
+        </div>
+        {% block clock %}
+            {% include 'main/clock-special.html' %}
+        {% endblock %}
+    </header>
+{% endblock %}
+{% block main %}
+    <main class="row" style="background: url({% static 'main/img/field.gif' %}) no-repeat;  background-size: cover;" id="main">
+        <div class="col-md-2 side_menu" style="background: linear-gradient(167deg, #5B5561 30%, #A5796C 70%) center fixed; list-style: none;">
+            <h1 class="text-center" style="font-family: Rubik Marker Hatch, cursive, Arial, Helvetica Neue, Helvetica, sans-serif;">Меню</h1>
+            {% block sidebar %}
+                <ul class="vstack gap-2">
+                    {% block home %}<li class="p-1"><i class="fa-solid fa-house"></i><a href="{% url 'home' %}" style="text-decoration: none; color: #FDCE4B;">&nbspДомой</a></li>{% endblock %}
+                    {% block news %}<li class="p-1"><i class="fa-solid fa-radio"></i><a href="{% url 'news_index' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНовости</a></li>{% endblock %}
+                    {% block contacts %}<li class="p-1"><i class="fa-solid fa-address-book"></i><a href="{% url 'contact' %}" style="text-decoration: none; color: #FDCE4B;">&nbspКонтакты</a></li>{% endblock %}
+                    {% block about %}<li class="p-1"><i class="fa-solid fa-people-group"></i><a href="{% url 'of' %}" style="text-decoration: none; color: #FDCE4B;">&nbspО нас</a></li>{% endblock %}
+                    {% block readers %}<li class="p-1"><i class="fa-solid fa-user-group"></i><a href="{% url 'news_readers' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНаши гости</a></li>{% endblock %}
+                    {% block offer %}<li class="p-1"><i class="fa-solid fa-gem"></i><a href="{% url 'action' %}" style="text-decoration: none; color: #FDCE4B;">&nbspАкция</a></li>{% endblock %}
+                    <li><a href="javascript:window.history.back();" style="text-decoration: none; color: #FDCE4B;"><i class="fa-solid fa-reply"> Назад</i></a></li>
+                    {% block user %}
+                        {% include 'users/user-actions.html' %}
+                    {% endblock %}
+                    {% if author.user.username == 'ietvoes' %}
+                        <li>
+                            <div id="vk_post_178644073_3567"></div>
+                        </li>
+                        <li>
+                            <div id="vk_post_178644073_3566"></div>
+                        </li>
+                    {% endif %}
+                </ul>
+            {% endblock %}
+        </div>
+        <ul class="col" style="list-style: none;">
+            <li class="col-md-5" style="background: #5B5561; padding: 0; margin: 1%; opacity: 0.9;">
+                <div class="row">
+                    <img src="{{ author.account_image.url }}" id="user-ava" alt="коллега" style="height: 40vh;" />
+                </div>
+                <div class="row">
+                    <div class="col-md-1">
+                        {% block private-contacts %}
+                            {% include 'users/public-draw-contacts.html' %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Никнейм</p>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>User name</p>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Имя</p>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Фамилия</p>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>День рождения</p>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Адрес</p>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Место работы</p>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Дата регистрации</p>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Почта</p>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Последний онлайн</p>
+            </li>
+            <li class="col-md-5" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p>Телефон</p>
+            </li>
+        </ul>
+        <ul class="col-md-5" style="margin-top: 32%;  list-style: none;">
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if author.nickname == '' %}
+                    <i class="fa-solid fa-lock"></i>
+                {% else %}
+                    {{ author.nickname }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{{ author.user.username }}</p>
+            </li>
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if author.user.first_name == '' %}
+                    <i class="fa-solid fa-lock"></i>
+                {% else %}
+                    {{ author.user.first_name }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if author.user.last_name == '' %}
+                    <i class="fa-solid fa-lock"></i>
+                {% else %}
+                    {{ author.user.last_name }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if author.birthdate == None %}
+                    <i class="fa-solid fa-lock"></i>
+                {% else %}
+                    {{ author.birthdate }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if author.address == '' %}
+                    <i class="fa-solid fa-lock"></i>
+                {% else %}
+                    {{ author.address }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if author.job == '' %}
+                    <i class="fa-solid fa-lock"></i>
+                {% else %}
+                    {{ author.job }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{{ author.user.date_joined }}</p>
+            </li>
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if author.user.email == '' %}
+                    <i class="fa-solid fa-lock"></i>
+                {% else %}
+                    {{ author.user.email }}
+                {% endif %}</p>
+            </li>
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{{ author.user.last_login }}</p>
+            </li>
+            <li class="col-md-12" style="background: #5B5561; padding: 4% 0 0 4%; margin: 1%; opacity: 0.5;">
+                <p class="text-center">{% if author.phone == '' %}
+                    <i class="fa-solid fa-lock"></i>
+                {% else %}
+                    {{ author.phone }}
+                {% endif %}</p>
+            </li>
+        </ul>
+        <ul class="row" style="list-style: none;">
+            <li class="col-md-2" style="background: #5B5561; padding: 4% 0 0 4%; opacity: 0.7;">
+                {% if author.user.username == 'ietvoes' %}
+                    <div id="vk_post_178644073_3565"></div>
+                {% endif %}
+            </li>
+            <li class="col-md-2" style="background: #5B5561; padding: 4% 0 0 4%; opacity: 0.7;"></li>
+            <li class="col-md-2" style="background: #5B5561; padding: 4% 0 0 4%; opacity: 0.7;"></li>
+            <li class="col-md-2" style="background: #5B5561; padding: 4% 0 0 4%; opacity: 0.7;"></li>
+            <li class="col-md-2" style="background: #5B5561; padding: 4% 0 0 4%; opacity: 0.7;">
+                {% if author.user.username == 'ietvoes' %}
+                    <div id="vk_post_178644073_3564"></div>
+                {% endif %}
+            </li>
+            <li class="col-md-2" style="background: #5B5561; padding: 4% 0 0 4%; opacity: 0.7;">
+                {% if author.user.username == 'ietvoes' %}
+                    <div id="vk_post_178644073_3556"></div>
+                {% endif %}
+            </li>
+        </ul>
+    </main>
+    <script type="text/javascript" src="https://vk.com/js/api/openapi.js?169"></script>
+    <script type="text/javascript">
+      (function() {
+        //ietvoes
+        VK.Widgets.Post("vk_post_178644073_3567", 178644073, 3567, 'XllqL3qrzkjMou9j7qoUIwutq7zf');
+        VK.Widgets.Post("vk_post_178644073_3566", 178644073, 3566, 'IoVkXdwI66DbWfBh1_IG_9GOLv3A');
+        VK.Widgets.Post("vk_post_178644073_3565", 178644073, 3565, 'Fq39LgWbE0jz0e6YxCc1x3spxUVU');
+        VK.Widgets.Post("vk_post_178644073_3564", 178644073, 3564, 'CKfo8jlASY9fDEiP2tY2fie5A2l1');
+        VK.Widgets.Post("vk_post_178644073_3556", 178644073, 3556, 'QaRJoWmJ19nyGndrpndedZjYQ3q9');
+      }());
+    </script>
+{% endblock %}

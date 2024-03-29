@@ -1,10 +1,5 @@
 import os
 from pathlib import Path
-#import environ
-#env = environ.Env()
-#environ.Env.read_env()
-from dotenv import load_dotenv
-load_dotenv()
 """
 Django settings for NewsStudyRtk project.
 
@@ -25,7 +20,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 # SECURITY WARNING: keep the secret key used in production secret!
-DEBUG = True
+DEBUG = False
 
 with open('/home/c/cd80175/deploy53/public_html/secret_key.txt') as f:
     SECRET_KEY = f.read().strip()
@@ -42,6 +37,15 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'bootstrap5',
+    'main',
+    'news',
+    'users',
+    'debug_toolbar',
+    'crispy_forms',
+    'crispy_bootstrap5',
+    'ckeditor',
+    'ckeditor_uploader',
 ]
 
 MIDDLEWARE = [
@@ -52,14 +56,16 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
 ]
 
+INTERNAL_IPS = ['127.0.0.1',]
 ROOT_URLCONF = 'NewsStudyRtk.urls'
 
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [BASE_DIR/'all_apps/templates'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -80,14 +86,20 @@ WSGI_APPLICATION = 'NewsStudyRtk.wsgi.application'
 
 DATABASES = { 
     'default': { 
-        'ENGINE': 'django.db.backends.mysql', 
-        'NAME': 'cd80175_dixie34', 
-        'USER': 'cd80175_dixie34', 
-        'PASSWORD': 'sashadb', 
-        'HOST': 'localhost',
+        "ENGINE": "django.db.backends.mysql", 
+        "NAME": "cd80175_dixie34", 
+        "USER": "cd80175_dixie34", 
+        "PASSWORD": "sashadb", 
+        "HOST": "localhost",
+        "PORT": "3306",
+        "OPTIONS": {
+            "isolation_level": "read committed",
+            "init_command": "SET default_storage_engine=INNODB",
+            "sql_mode": "STRICT_TRANS_TABLES",
+        },
+        "CONN_MAX_AGE": 600
     } 
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -111,23 +123,109 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'ru'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Europe/Moscow'
 
 USE_I18N = True
 
 USE_TZ = True
 
+CKEDITOR_UPLOAD_PATH = "uploads/"
+
+#MEDIA_ROOT = os.path.join(BASE_DIR,'media')
+MEDIA_ROOT = '/home/c/cd80175/deploy53/public_html/media/'
+MEDIA_URL = 'media/'
+
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_ROOT = '/home/c/cd80175/deploy53/public_html/static/'
-
+STATIC_ROOT = '/home/c/cd80175/deploy53/public_html/static/' #раскомментить,когда проводим collectstatic
 STATIC_URL = 'static/'
+
+#STATIC_ROOT = os.path.join(BASE_DIR,'static')
+STATICFILES_DIRS = [
+    BASE_DIR/"static",
+    "home/static",
+]
+
+
+CRISPY_ALLOWED_TEMPLATES_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = "bootstrap5"
+
+LOGIN_REDIRECT_URL = 'home'
+LOGOUT_REDIRECT_URL = 'logout'
+
+LOGIN_URL = 'login'
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+CKEDITOR_CONFIGS = {
+    'default': {
+        #'skin': 'moono',
+        # 'skin': 'office2013',
+        'toolbar_Basic': [
+            ['Source', '-', 'Bold', 'Italic']
+        ],
+        'toolbar_YourCustomToolbarConfig': [
+            {'name': 'document', 'items': ['Source', '-', 'Save', 'NewPage', 'Preview', 'Print', '-', 'Templates']},
+            {'name': 'clipboard', 'items': ['Cut', 'Copy', 'Paste', 'PasteText', 'PasteFromWord', '-', 'Undo', 'Redo']},
+            {'name': 'editing', 'items': ['Find', 'Replace', '-', 'SelectAll']},
+            {'name': 'forms',
+             'items': ['Form', 'Checkbox', 'Radio', 'TextField', 'Textarea', 'Select', 'Button', 'ImageButton',
+                       'HiddenField']},
+            '/',
+            {'name': 'basicstyles',
+             'items': ['Bold', 'Italic', 'Underline', 'Strike', 'Subscript', 'Superscript', '-', 'RemoveFormat']},
+            {'name': 'paragraph',
+             'items': ['NumberedList', 'BulletedList', '-', 'Outdent', 'Indent', '-', 'Blockquote', 'CreateDiv', '-',
+                       'JustifyLeft', 'JustifyCenter', 'JustifyRight', 'JustifyBlock', '-', 'BidiLtr', 'BidiRtl',
+                       'Language']},
+            {'name': 'links', 'items': ['Link', 'Unlink', 'Anchor']},
+            {'name': 'insert',
+             'items': ['Image', 'Flash', 'Table', 'HorizontalRule', 'Smiley', 'SpecialChar', 'PageBreak', 'Iframe']},
+            '/',
+            {'name': 'styles', 'items': ['Styles', 'Format', 'Font', 'FontSize']},
+            {'name': 'colors', 'items': ['TextColor', 'BGColor']},
+            {'name': 'tools', 'items': ['Maximize', 'ShowBlocks']},
+            {'name': 'about', 'items': ['About']},
+            '/',  # put this to force next toolbar on new line
+            {'name': 'yourcustomtools', 'items': [
+                # put the name of your editor.ui.addButton here
+                'Preview',
+                'Maximize',
+
+            ]},
+        ],
+        'toolbar': 'YourCustomToolbarConfig',  # put selected toolbar config here
+        # 'toolbarGroups': [{ 'name': 'document', 'groups': [ 'mode', 'document', 'doctools' ] }],
+        # 'height': 291,
+        # 'width': '100%',
+        # 'filebrowserWindowHeight': 725,
+        # 'filebrowserWindowWidth': 940,
+        # 'toolbarCanCollapse': True,
+        # 'mathJaxLib': '//cdn.mathjax.org/mathjax/2.2-latest/MathJax.js?config=TeX-AMS_HTML',
+        'tabSpaces': 4,
+        'extraPlugins': ','.join([
+            'uploadimage', # the upload image feature
+            # your extra plugins here
+            'div',
+            'autolink',
+            'autoembed',
+            'embedsemantic',
+            'autogrow',
+            #'devtools',
+            'widget',
+            'lineutils',
+            'clipboard',
+            'dialog',
+            'dialogui',
+            'elementspath'
+        ]),
+    }
+}

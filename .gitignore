@@ -10,3 +10,12 @@ secret_key.txt
 *.ssh/
 id_rsa.pub
 id_rsa
+/static
+/venv
+/media
+/license
+*.gz
+.htaccess
+index.htm
+virtualenv.pyz
+*.git/
