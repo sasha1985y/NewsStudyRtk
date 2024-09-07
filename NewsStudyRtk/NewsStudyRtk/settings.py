@@ -87,11 +87,11 @@ WSGI_APPLICATION = 'NewsStudyRtk.wsgi.application'
 DATABASES = { 
     'default': { 
         "ENGINE": "django.db.backends.mysql", 
-        "NAME": "cd80175_dixie34", 
-        "USER": "cd80175_dixie34", 
-        "PASSWORD": "sashadb", 
-        "HOST": "localhost",
-        "PORT": "3306",
+        "NAME": env("DB_NAME"),
+        "USER": env("DB_USER"),
+        "PASSWORD": env("DB_PASSWORD"),
+        "HOST": env("DB_HOST"),
+        "PORT": env("DB_PORT"),
         "OPTIONS": {
             "isolation_level": "read committed",
             "init_command": "SET default_storage_engine=INNODB",
