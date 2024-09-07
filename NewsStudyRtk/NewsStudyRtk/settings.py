@@ -1,5 +1,21 @@
 import os
 from pathlib import Path
+#from decouple import config
+import environ
+
+env = environ.Env()
+# reading .env file
+environ.Env.read_env()
+
+BOT_TOKEN = env('BOT_TOKEN')
+YOUR_ID = env('YOUR_ID')
+
+#with open('/home/c/cd80175/deploy53/public_html/bot_token.txt') as f:
+#    BOT_TOKEN = f.read().strip()
+    
+#with open('/home/c/cd80175/deploy53/public_html/your_id.txt') as f:
+#	YOUR_ID = f.read().strip()
+
 """
 Django settings for NewsStudyRtk project.
 
