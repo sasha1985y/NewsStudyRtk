@@ -3,7 +3,7 @@
 *.pyc
 __pycache__
 db.sqlite3
-.idea
+*.idea
 /env
 *.env
 secret_key.txt
@@ -15,8 +15,9 @@ id_rsa
 /media
 /license
 *.gz
-.htaccess
+*.htaccess
 index.htm
 virtualenv.pyz
 *.git/
-robots.txt                                                                              sitemap.xml 
+robots.txt                                                                              
+sitemap.xml 
