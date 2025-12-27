@@ -3,4 +3,4 @@ Disallow: /admin/
 Disallow: /readers/
 Disallow: /private/
 Disallow: /public/
-Sitemap: https://hosting.timeweb.ru/fileman/home/deploy53/public_html/sitemap.xml
+Sitemap: **************************************************************
