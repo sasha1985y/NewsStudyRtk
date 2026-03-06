@@ -27,7 +27,14 @@
                     {% block about %}<li class="p-1"><i class="fa-solid fa-people-group"></i><a href="{% url 'of' %}" style="text-decoration: none; color: #FDCE4B;">&nbspО нас</a></li>{% endblock %}
                     {% block readers %}<li class="p-1"><i class="fa-solid fa-user-group"></i><a href="{% url 'news_readers' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНаши гости</a></li>{% endblock %}
                     {% block offer %}<li class="p-1"><i class="fa-solid fa-gem"></i><a href="{% url 'action' %}" style="text-decoration: none; color: #FDCE4B;">&nbspАкция</a></li>{% endblock %}
-                    {% block exit %}<li class="p-1"><i class="fa-solid fa-door-open"></i><a href="{% url 'logout' %}" style="text-decoration: none; color: #FDCE4B;">&nbspВыход</a></li>{% endblock %}
+                    {% block exit %}
+                    	<li>
+		                    <form method="POST" action="{% url 'logout' %}">
+		                        {% csrf_token %}
+		                        <button type="submit" class="btn dropdown-item"><i class="fa-solid fa-door-open" style="text-decoration: none; color: #FDCE4B;">&nbsp&nbspВыйти</i></button>
+		                    </form>
+		                </li>
+                    {% endblock %}
                     {% block admin %}<li class="p-1"><i class="fa-solid fa-crown {% if request.path  == '/admin/' %} link-active {% endif %}"></i><a href="/admin/" style="text-decoration: none; color: #FDCE4B;">&nbspЯ-Админ?</a></li>{% endblock %}
                     {% block catalog %}<li class="p-1"><i class="fa-solid fa-layer-group"></i><a href="#" style="text-decoration: none; color: #FDCE4B;">&nbspМои статьи</a></li>{% endblock %}
                     <li><a href="javascript:window.history.back();" style="text-decoration: none; color: #FDCE4B;"><i class="fa-solid fa-reply"> Назад</i></a></li>
