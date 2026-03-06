@@ -29,7 +29,6 @@
                     {% block readers %}<li class="p-1"><i class="fa-solid fa-user-group"></i><a href="{% url 'news_readers' %}" style="text-decoration: none; color: #FDCE4B;">&nbspНаши гости</a></li>{% endblock %}
                     {% block offer %}<li class="p-1"><i class="fa-solid fa-gem"></i><a href="{% url 'action' %}" style="text-decoration: none; color: #FDCE4B;">&nbspАкция</a></li>{% endblock %}
                     {% block exit %}
-                    	<!--<li class="p-1"><i class="fa-solid fa-door-open"></i><a href="{% url 'logout' %}" style="text-decoration: none; color: #FDCE4B;">&nbspВыход</a></li>-->
                     	<li>
 		                    <form method="POST" action="{% url 'logout' %}">
 		                        {% csrf_token %}
