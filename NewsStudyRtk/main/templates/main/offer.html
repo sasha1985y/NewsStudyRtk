@@ -5,7 +5,7 @@
 {% block title %} Акция {% endblock %}
 
 {% block main %}
-    <main class="row" {% if "https://99px.ru/sstorage/86/2015/07/image_86210715080425356106.gif" not in request.META.HTTP_REFERER|default_if_none:'' %} style=" background: url('https://99px.ru/sstorage/86/2015/07/image_86210715080425356106.gif') no-repeat center;  background-size: 42vw; position: relative; height: auto;"{% else %} style=" background: url({% static 'main/img/blaze.gif' %}) no-repeat center;  background-size: 42vw; position: relative; height: auto;"{% endif %}>
+    <main class="row" style=" background: url({% static 'main/img/drops.gif' %}) no-repeat center;  background-size: 42vw; position: relative; height: auto;">
         <div class="col-md-2 side_menu" style="list-style: none; position: relative; height: auto;">
             {% block sidebar %}
                 <h1 class="text-center" style="font-family: Rubik Marker Hatch, cursive, Arial, Helvetica Neue, Helvetica, sans-serif;">Меню</h1>
